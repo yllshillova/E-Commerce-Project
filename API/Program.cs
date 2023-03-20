@@ -12,7 +12,7 @@ builder.Services.AddSwaggerGen();
 
 // Service for DB Connection
 builder.Services.AddDbContext<StoreContext>(options => {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 
