@@ -34,8 +34,8 @@ namespace API.Data.Migrations
                     b.Property<string>("PictureUrl")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("Price")
-                        .HasColumnType("TEXT");
+                    b.Property<long>("Price")
+                        .HasColumnType("INTEGER");
 
                     b.Property<int>("QuantityInStock")
                         .HasColumnType("INTEGER");

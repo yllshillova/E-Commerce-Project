@@ -15,6 +15,12 @@ builder.Services.AddDbContext<StoreContext>(options => {
     options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+/*
+Kjo linjë kod shton middleware për politikat e CORS në shërbimin e ASP.NET Core,
+duke lejuar kërkesat nga burime të ndryshme dhe duke e bërë aplikacionin të sigurt dhe funksional 
+nëse ka nevojë për të marrë resurse nga burime të ndryshme.
+*/
+builder.Services.AddCors();
 
 var app = builder.Build();
 
@@ -24,6 +30,11 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+// pjesa ku shtohet middleware per me leju kerkesa pi burimit localhost:3000
+app.UseCors(opt =>
+{
+    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+});
 
 app.UseAuthorization();
 //api e din se ku ko me dergu request kur vjen puna te nje API endpoint sepse e shton konfigurimin e rrugetimit
