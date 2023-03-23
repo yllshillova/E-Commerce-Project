@@ -1,20 +1,22 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './app/layout/styles.css';
-import App from './app/layout/App';
 import reportWebVitals from './reportWebVitals';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-
+import { RouterProvider } from 'react-router-dom';
+import { router } from './app/router/Routes';
+// Kjo eshte our startup class or file or component whatever we wanna call it.
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+// routerprovider e kem perdor sepse our router now is being provided and  our app is going to be loaded by our router.
 root.render(
   <React.StrictMode>
-    <App />
+    <RouterProvider router={router}/>
   </React.StrictMode>
 );
 

@@ -1,6 +1,6 @@
 import { Container, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
 import { useState } from "react";
-import Catalog from "../../features/catalog/Catalog";
+import { Outlet } from "react-router-dom";
 import Header from "./Header";
 
 // this is the main component which holds everything
@@ -18,12 +18,14 @@ function App() {
   function handleThemeChange(){
     setDarkMode(!darkMode);
   }
+  // outlet e vendosim ne container per shkak te navigimit per shkak se ajo zevendsohet me secilin root varesisht se cilin component e prekim na 
+  //psh nese ne navigojm te catalog ather outlet eshte ekuivalente me <Catalog /> etj.
   return (
     <ThemeProvider theme ={theme}>
         <CssBaseline />
         <Header darkMode = {darkMode} handleThemeChange = {handleThemeChange} />
         <Container>
-        <Catalog />
+        <Outlet />
         </Container>
       
     </ThemeProvider>
