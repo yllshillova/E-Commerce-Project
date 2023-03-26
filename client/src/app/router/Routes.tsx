@@ -1,9 +1,11 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter,Navigate } from "react-router-dom";
 import AboutPage from "../../features/about/AboutPage";
 import Catalog from "../../features/catalog/Catalog";
 import ProductDetails from "../../features/catalog/ProductDetails";
 import ContactPage from "../../features/contact/ContactPage";
 import HomePage from "../../features/home/HomePage";
+import ServerError from "../errors/ServerError";
+import NotFound from "../errors/NotFound";
 import App from "../layout/App";
 // Ktu e kem kriju navigimin ne mes komponentave tu e perdor createBrowserRouter qe e marum prej react router dom.
 //ky merr si parameter nje route object ku ne duhet me ja definu path, element se kush eshte targeti yne per shkak se eshte nje SPA dhe children
@@ -18,6 +20,9 @@ export const router = createBrowserRouter([
             {path: 'catalog/:id', element: <ProductDetails />},
             {path: 'about', element: <AboutPage />},
             {path: 'contact', element: <ContactPage />},
+            {path: 'server-error', element: <ServerError />},
+            {path: 'not-found', element: <NotFound />},
+            {path: '*', element: <Navigate replace to='/not-found' />}
         ]
     }
 ])
