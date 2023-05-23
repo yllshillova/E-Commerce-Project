@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace API.Middleware
 {
+    // kjo eshte klasa e cila eshte zevendsuar me default developers error page e cila shfaqet kur ndodh nddonje gabim
+    // kta e kem bo ne menyr qe me ju shfaq klientav ni error sa ma user friendly jo me detaje komplekse ashtu siq shfaqet by default
     public class ExceptionMiddleware
     {
         // RequestDelegate is going to allow us to execute that next method and pass that on the request to the next piece of middleware,
