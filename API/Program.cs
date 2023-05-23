@@ -37,8 +37,8 @@ if (app.Environment.IsDevelopment())
 }
 // pjesa ku shtohet middleware per me leju kerkesa pi burimit localhost:3000
 app.UseCors(opt =>
-{
-    opt.AllowAnyHeader().AllowAnyMethod().WithOrigins("http://localhost:3000");
+{                                      //kta e perdorum(allow credentials) per me lehu klientin me pass cookie prej api ne client side dhe anasjelltas
+    opt.AllowAnyHeader().AllowAnyMethod().AllowCredentials().WithOrigins("http://localhost:3000");
 });
 
 app.UseAuthorization();
