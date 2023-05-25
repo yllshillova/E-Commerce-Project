@@ -4,8 +4,9 @@ import { router } from "../router/Routes";
 
 const sleep = () => new Promise(resolve => setTimeout(resolve, 500));
 
-axios.defaults.baseURL = 'http://localhost:5000/api/'; 
-
+axios.defaults.baseURL = 'http://localhost:5000/api/';
+// kta e bojm qe me mujt browseri me pranu cookie dhe me bo set cookie ne storage tone te applikacionit.
+axios.defaults.withCredentials = true;
 // responseBody is equivalent to :
 /* 
     function responseBodyFn(response : AxiosResponse) {
@@ -71,9 +72,20 @@ const TestErrors = {
     getValidationError : () => requests.get('buggy/validation-error'),
 }
 
+const Basket = {
+    get: () => requests.get('basket'),
+    // productId duhet me kan e shkrume saktsisht qishtu per arsyje se API duhet me pas ni key
+    // qe i pershtatet kur t shkon te basketController ne httpPost request me kqyr.
+    addItem: (productId: number, quantity = 1 ) => requests.post(`basket?productId=${productId}&quantity=${quantity}`,{}),
+    removeItem: (productId: number, quantity = 1) => requests.delete(`basket?productId=${productId}&quantity=${quantity}`)
+
+}
+
+
 const agent= {
     Catalog,
-    TestErrors
+    TestErrors,
+    Basket
 }
 
 
