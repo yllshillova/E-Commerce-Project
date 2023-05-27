@@ -2,19 +2,20 @@ import { createContext, PropsWithChildren, useContext, useState } from "react";
 import { Basket } from "../models/basket";
 // ky interface definon formen e vleres se kij konteksti
 interface StoreContextValue {
-    basket: Basket | null;
-    setBasket: (basket: Basket) => void;
     removeItem: (productId: number, quantity: number) => void;
+    setBasket: (basket: Basket) => void;
+    basket: Basket | null;
 }
 
 export const StoreContext = createContext<StoreContextValue | undefined>(undefined);
 // ktu e kem kriju nje hook 
 export function useStoreContext() {
-    const context = useContext(StoreContext);
+    let context = useContext(StoreContext);
 
     if (context === undefined) {
         throw Error('Oops - we do not seem to be inside the provider');
     }
+
     return context;
 }
 
@@ -32,14 +33,14 @@ export function StoreProvider({ children }: PropsWithChildren<any>) {
         if (itemIndex >= 0) {
             items[itemIndex].quantity -= quantity;
             //                                     e fshin nje element nga array
-            if (items[itemIndex].quantity = 0) items.splice(itemIndex, 1);
+            if (items[itemIndex].quantity === 0) items.splice(itemIndex, 1);
             setBasket(prevState => {
-                return { ...prevState!, items }
+                return {...prevState!, items}
             })
         }
     }
     return (
-        <StoreContext.Provider value={{basket,setBasket,removeItem}}>
+        <StoreContext.Provider value={{basket, setBasket, removeItem}}>
             {children}
         </StoreContext.Provider>
     )

@@ -1,6 +1,7 @@
 import { ShoppingCart } from "@mui/icons-material";
 import { AppBar, List, Switch, Toolbar, Typography, ListItem, IconButton, Badge, Box } from "@mui/material";
 import { Link, NavLink } from "react-router-dom";
+import { useStoreContext } from "../context/StoreContext";
 
 const midLinks = [
     { title: 'catalog', path: '/catalog' },
@@ -29,6 +30,9 @@ interface Props {
     handleThemeChange: () => void;
 }
 export default function Header({ darkMode, handleThemeChange }: Props) {
+    const {basket} = useStoreContext();
+    // funksion i cili merr nje vlere te sum 0 dhe mbledh items ne array te caktuar duke kthyer nje shume ne itemCount qe eshte totali i items ne shporte.
+    const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0);
     return (
         <AppBar position="static" sx={{ mb: 4 }}>
             <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
@@ -61,7 +65,7 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
                 {/* right links */}
                 <Box display='flex' alignItems='center'>
                     <IconButton component = {Link} to='/basket' size='large' edge='start' color='inherit' sx={{ mr: 2 }}>
-                        <Badge badgeContent='4' color="secondary">
+                        <Badge badgeContent={itemCount} color="secondary">
                             <ShoppingCart />
                         </Badge>
                     </IconButton>
