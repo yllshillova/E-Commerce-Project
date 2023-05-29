@@ -1,7 +1,7 @@
 import { ShoppingCart } from "@mui/icons-material";
 import { AppBar, List, Switch, Toolbar, Typography, ListItem, IconButton, Badge, Box } from "@mui/material";
 import { Link, NavLink } from "react-router-dom";
-import { useStoreContext } from "../context/StoreContext";
+import { useAppSelector } from "../store/configureStore";
 
 const midLinks = [
     { title: 'catalog', path: '/catalog' },
@@ -30,7 +30,8 @@ interface Props {
     handleThemeChange: () => void;
 }
 export default function Header({ darkMode, handleThemeChange }: Props) {
-    const {basket} = useStoreContext();
+    // appselector hook e perdorum kur na vyn gjendja e basketit psh ne header per count me na dal ose ne basket page
+    const {basket} = useAppSelector(state => state.basket);
     // funksion i cili merr nje vlere te sum 0 dhe mbledh items ne array te caktuar duke kthyer nje shume ne itemCount qe eshte totali i items ne shporte.
     const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0);
     return (

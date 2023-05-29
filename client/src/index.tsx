@@ -8,8 +8,10 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './app/router/Routes';
-import { StoreProvider } from './app/context/StoreContext';
+import { Provider } from 'react-redux';
+import { store } from './app/store/configureStore';
 // Kjo eshte our startup class or file or component whatever we wanna call it.
+
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
@@ -17,9 +19,9 @@ const root = ReactDOM.createRoot(
 // routerprovider e kem perdor sepse our router now is being provided and  our app is going to be loaded by our router.
 root.render(
   <React.StrictMode>
-    <StoreProvider>
-      <RouterProvider router={router} />
-    </StoreProvider>
+      <Provider store={store}>
+        <RouterProvider router={router} />
+      </Provider>
   </React.StrictMode>
 );
 
