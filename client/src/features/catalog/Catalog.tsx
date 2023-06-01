@@ -1,25 +1,22 @@
-import { useState, useEffect } from "react";
-import agent from "../../app/api/agent";
+import { useEffect } from "react";
 import LoadingComponent from "../../app/layout/LoadingComponent";
-import { Product } from "../../app/models/product";
+import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
+import { fetchProductsAsync, productSelectors } from "./catalogSlice";
 import ProductList from "./ProductList";
 
 
 // this component holds the entire products and its components
 export default function Catalog() {
-     // we using useState which takes as a parameter an initial state value (in our case an empty array) and by adding the annotation <Product[]>
-  // we are telling that this empty array will contain product objects.
-  const [products, setProducts] = useState<Product[]>([]);
-  const [loading,setLoading] = useState(true);
+  // kjo 'products' naj kthen ni list me produkte
+  const products = useAppSelector(productSelectors.selectAll);
+  const {productsLoaded, status} = useAppSelector(state => state.catalog);
+  const dispatch = useAppDispatch();
   // we using useEffect to fetch data from the specified url when the useState is loaded 
   useEffect(() => {
-    agent.Catalog.list()
-    .then(products => setProducts(products))
-    .catch(error => console.log(error))
-    .finally(() => setLoading(false))
-  },[])
+    if(!productsLoaded) dispatch(fetchProductsAsync());
+  },[productsLoaded, dispatch])
 
-  if(loading) return <LoadingComponent message='Loading products...'/>
+  if(status.includes('pending')) return <LoadingComponent message='Loading products...'/>
  
     return (
         <>

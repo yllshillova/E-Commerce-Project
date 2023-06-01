@@ -40,7 +40,7 @@ namespace API.Controllers
 
             // get product                    // findAsync perdoret per me gjet diqka ne nje tabel psh products e gjen ne baz te id qe ja qojm si parameter
             var product = await _context.Products.FindAsync(productId);
-            if (product == null) return NotFound();
+            if (product == null) return BadRequest(new ProblemDetails {Title = "Product not found"});
 
             // add item
             basket.AddItem(product, quantity);

@@ -16,13 +16,15 @@ import { store } from './app/store/configureStore';
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+
 // routerprovider e kem perdor sepse our router now is being provided and  our app is going to be loaded by our router.
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
       <Provider store={store}>
         <RouterProvider router={router} />
       </Provider>
-  </React.StrictMode>
+  /* </React.StrictMode> */
 );
 
 // If you want to start measuring performance in your app, pass a function

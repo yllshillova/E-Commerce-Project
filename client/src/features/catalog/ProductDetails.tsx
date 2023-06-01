@@ -2,22 +2,20 @@ import { LoadingButton } from "@mui/lab";
 import { Divider, Grid, Typography, Table, TableContainer, TableBody, TableRow, TableCell, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import agent from "../../app/api/agent";
 import NotFound from "../../app/errors/NotFound";
 import LoadingComponent from "../../app/layout/LoadingComponent";
-import { Product } from "../../app/models/product";
 import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { setBasket, removeItem } from "../basket/basketSlice";
+import { addBasketItemAsync, removeBasketItemAsync } from "../basket/basketSlice";
+import { fetchProductAsync, productSelectors } from "./catalogSlice";
 
 export default function ProductDetails() {
-    const { basket } = useAppSelector(state => state.basket);
+    const { basket, status } = useAppSelector(state => state.basket);
     const dispatch = useAppDispatch();
     // e kem bo id: string sepse vjen ne url e del si string perndryshe e dim qe osht number.
     const { id } = useParams<{ id: string }>();
-    const [product, setProduct] = useState<Product | null>(null);
-    const [loading, setLoading] = useState(true);
+    const product = useAppSelector(state => productSelectors.selectById(state, id!));
+    const {status: productStatus} = useAppSelector(state => state.catalog);
     const [quantity, setQuantity] = useState(0);
-    const [submitting, setSubmitting] = useState(false);
     const item = basket?.items.find(i => i.productId === product?.id);
 
     // ne ket rast kem perdor axios per me fetch data, si dependency e kom dergu id per arsyje se kjo ko mu thirr sa her te montohet komponenti
@@ -25,11 +23,9 @@ export default function ProductDetails() {
     useEffect(() => {
         if (item) setQuantity(item.quantity);
         // e shtojm ket pjesen id && so this code will be executed once we actually have something in the id
-        id && agent.Catalog.details(parseInt(id))
-            .then(response => setProduct(response))
-            .catch(error => console.log(error))
-            .finally(() => setLoading(false));
-    }, [id, item])
+        // domethan e marum produktin veq nese nuk ekziston
+        if(!product && id) dispatch(fetchProductAsync(parseInt(id)));
+    }, [id, item,dispatch, product])
     // funksioni qe e mundeson ndryshimin e numrit te quantity
     function handleInputChange(event: any) {
         if (event.target.value >= 0) {
@@ -40,24 +36,17 @@ export default function ProductDetails() {
     // apo nese quantity i dhene eshte me i madh se ati i item qe e ka vet (nese e kem shtu kuantitetin vet) ather shtohet ne basket duket u rujt vlera
     // ne updatedQuantity. e nese nuk eshte asnjona kalon ne else ku e fshin sasin .
     function handleUpdateCart(){
-        setSubmitting(true);
         if(!item || quantity > item.quantity){
             const updatedQuantity = item ? quantity - item.quantity : quantity;
-            agent.Basket.addItem(product?.id!, updatedQuantity)
-                .then(basket => dispatch(setBasket(basket)))
-                .catch(error => console.log(error))
-                .finally(() => setSubmitting(false))
+            dispatch(addBasketItemAsync({productId: product?.id!, quantity: updatedQuantity}));
         } 
         else{
             const updatedQuantity = item.quantity - quantity;
-            agent.Basket.removeItem(product?.id!, updatedQuantity)
-                .then(() => dispatch(removeItem({productId :product?.id!,quantity : updatedQuantity})))
-                .catch(error => console.log(error))
-                .finally(() => setSubmitting(false))
+            dispatch(removeBasketItemAsync({productId: product?.id!, quantity: updatedQuantity}));
         }
     }
 
-    if (loading) return <LoadingComponent message='Loading product...' />
+    if (productStatus.includes('pending')) return <LoadingComponent message='Loading product...' />
 
     if (!product) return <NotFound />
 
@@ -110,7 +99,7 @@ export default function ProductDetails() {
                     <Grid item xs={6}>
                         <LoadingButton
                             disabled={item?.quantity === quantity || (!item && quantity === 0)}
-                            loading={submitting}
+                            loading={status.includes('pending')}
                             onClick={handleUpdateCart}
                             sx={{ height: '55px' }}
                             color='primary'
