@@ -1,5 +1,6 @@
 import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
+import { PaginatedResponse } from "../models/pagination";
 import { router } from "../router/Routes";
 
 const sleep = () => new Promise(resolve => setTimeout(resolve, 500));
@@ -20,6 +21,11 @@ const responseBody = (response: AxiosResponse) => response.data;
 // data permban fusha te caktuara ne json response qe e kemi krijuar ne exceptionmiddleware  kurse statusi varet nga errori psh 400 401 500 etc.
 axios.interceptors.response.use(async response => {
     await sleep();
+    const pagination = response.headers['pagination'];
+    if(pagination){
+        response.data = new PaginatedResponse(response.data, JSON.parse(pagination));
+        return response;
+    }
     return response
 },(error : AxiosError) => {
     const {data, status} = error.response as AxiosResponse;
@@ -52,7 +58,7 @@ axios.interceptors.response.use(async response => {
 
 // objekti requests krijohet qe te kryejm kerkesa ne backend duke perdor librarine axios, saher qe perdoret get put post ose delete kthehet ose data nga server ose nje gabim gjat perpunimit.
 const requests = {
-    get: (url: string) => axios.get(url).then(responseBody),
+    get: (url: string, params?: URLSearchParams) => axios.get(url, {params}).then(responseBody),
     post: (url: string, body : {}) => axios.post(url, body).then(responseBody),
     put: (url: string, body : {}) => axios.put(url,body).then(responseBody),
     delete: (url: string) => axios.delete(url).then(responseBody)
@@ -60,8 +66,9 @@ const requests = {
 
 // this is the object that will store our requests for our catalog
 const Catalog = {
-    list : () => requests.get('products'),
-    details: (id: number) => requests.get(`products/${id}`)
+    list : (params: URLSearchParams) => requests.get('products', params),
+    details: (id: number) => requests.get(`products/${id}`),
+    fetchFilters: () => requests.get('products/filters')
 }
 
 const TestErrors = {

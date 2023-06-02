@@ -1,10 +1,13 @@
+using System.Text.Json;
 using API.Data;
 using API.Entities;
+using API.Extensions;
+using API.RequesHelpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers
-{   
+{
     public class ProductsController : BaseApiController
     {
         private readonly StoreContext _context;
@@ -14,16 +17,37 @@ namespace API.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<Product>>> GetProducts(){
-            return await _context.Products.ToListAsync();
+        public async Task<ActionResult<PagedList<Product>>> GetProducts([FromQuery] ProductParams productParams)
+        {
+            var query = _context.Products
+                .Sort(productParams.OrderBy)
+                .Search(productParams.SearchTerm)
+                .Filter(productParams.Brands, productParams.Types)
+                .AsQueryable();
+
+            var products = await PagedList<Product>.ToPagedList(query, productParams.PageNumber, productParams.PageSize);
+            Response.AddPaginationHeader(products.MetaData);
+            return products;
         }
         [HttpGet("{id}")] // ky eshte kerkesa per me marr vetem nje produkt te caktuar {id} eshte id-ja e produktit qe do t jepet ex api/products/3
-        
-        public async Task<ActionResult<Product>> GetProduct(int id){
-            var product =  await _context.Products.FindAsync(id);
-            if(product == null) return NotFound();
+
+        public async Task<ActionResult<Product>> GetProduct(int id)
+        {
+            var product = await _context.Products.FindAsync(id);
+            if (product == null) return NotFound();
             return product;
         }
+
+        [HttpGet("filters")]
+        public async Task<IActionResult> GetFilters()
+        {
+            var brands = await _context.Products.Select(p => p.Brand).Distinct().ToListAsync();
+            var types = await _context.Products.Select(p => p.Type).Distinct().ToListAsync();
+
+            return Ok(new {brands,types});
+
+        }
+
 
     }
 }
