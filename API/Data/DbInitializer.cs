@@ -1,11 +1,38 @@
 using API.Entities;
+using Microsoft.AspNetCore.Identity;
 
 namespace API.Data
 {
     public static class DbInitializer
     {
-        public static void Initialize(StoreContext context)
+        public static async Task Initialize(StoreContext context, UserManager<User> userManager)
         {
+            if (!userManager.Users.Any())
+            {
+                var user = new User
+                {
+                    UserName = "bob",
+                    Email = "bob@test.com"
+                };
+                // nuk e kem perdor savechangesAsync se vet kto dy metoda merren me at pun
+                await userManager.CreateAsync(user, "Pa$$w0rd");
+                await userManager.AddToRoleAsync(user, "Member");
+
+
+                var admin = new User
+                {
+                    UserName = "admin",
+                    Email = "admin@test.com"
+                };
+                await userManager.CreateAsync(admin, "Pa$$w0rd");
+                await userManager.AddToRolesAsync(admin, new [] {"Member","Admin"});
+
+            }
+
+
+
+
+
             // code if there is any product 
             if (context.Products.Any()) return;
             var products = new List<Product>
@@ -208,7 +235,8 @@ namespace API.Data
                 }
             };
 
-            foreach(var product in products){
+            foreach (var product in products)
+            {
                 // part where we list the products
                 context.Products.Add(product);
             }

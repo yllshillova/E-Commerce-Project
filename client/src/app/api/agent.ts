@@ -44,7 +44,7 @@ axios.interceptors.response.use(async response => {
             toast.error(data.title);
             break;
         case 401:
-            toast.error(data.title);
+            toast.error(data.title || 'Unauthorised');
             break;
         case 500:
             // navigate per me na navigu dikun 2 parametra 'to:' dhe options
@@ -88,11 +88,19 @@ const Basket = {
 
 }
 
+const Account = {
+    login : (values : any) => requests.post('account/login',values),
+    register : (values : any) => requests.post('account/register',values),
+    currentUser : () => requests.get('account/currentUser')
+}
+
+
 
 const agent= {
     Catalog,
     TestErrors,
-    Basket
+    Basket,
+    Account
 }
 
 
