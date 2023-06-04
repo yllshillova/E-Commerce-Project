@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { PaginatedResponse } from "../models/pagination";
 import { router } from "../router/Routes";
+import { store } from "../store/configureStore";
 
 const sleep = () => new Promise(resolve => setTimeout(resolve, 500));
 
@@ -16,6 +17,14 @@ axios.defaults.withCredentials = true;
 */
 // kthen vetem te dhenat nga pergjigja e axios
 const responseBody = (response: AxiosResponse) => response.data;
+// pjesa ku e shtojm headerin e Authorization ne rast se ka ndonje token aktualisht.
+axios.interceptors.request.use(config => {
+    const token = store.getState().account.user?.token;
+    if(token) config.headers.Authorization = `Bearer ${token}`;
+    return config;
+})
+
+
 // kemi perdor metoden use() ecila pranon dy parametra njerin nese kerkesa eshte e suksesshme dhe te dytin nese ndodh ndonje gabim
 // gabimev ju kem qas tu perdor AxiosError response ku i qasemi JSON file duke perdor parametrat data dhe status 
 // data permban fusha te caktuara ne json response qe e kemi krijuar ne exceptionmiddleware  kurse statusi varet nga errori psh 400 401 500 etc.
@@ -44,7 +53,7 @@ axios.interceptors.response.use(async response => {
             toast.error(data.title);
             break;
         case 401:
-            toast.error(data.title || 'Unauthorised');
+            toast.error(data.title);
             break;
         case 500:
             // navigate per me na navigu dikun 2 parametra 'to:' dhe options

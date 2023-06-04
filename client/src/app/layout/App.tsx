@@ -1,35 +1,32 @@
 import { Container, createTheme, CssBaseline, ThemeProvider } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import Header from "./Header";
 import 'react-toastify/dist/ReactToastify.css';
-import { getCookie } from "../util/util";
-import agent from "../api/agent";
 import LoadingComponent from "./LoadingComponent";
 import { useAppDispatch } from "../store/configureStore";
-import { setBasket } from "../../features/basket/basketSlice";
+import { fetchBasketAsync } from "../../features/basket/basketSlice";
 import { fetchCurrentUser } from "../../features/account/AccountSlice";
 // this is the main component which holds everything
 function App() {
   const dispatch = useAppDispatch();
-  const [loading, setLoading]= useState(true);
+  const [loading, setLoading] = useState(true);
+  const initApp = useCallback(async () =>  {
+    try {
+      await dispatch(fetchCurrentUser());
+      await dispatch(fetchBasketAsync());
+    } catch (error) {
+      console.log(error);
+    }
+  },[dispatch]);
 
 
-  useEffect(() =>{
-    const buyerId = getCookie('buyerId');
-    dispatch(fetchCurrentUser());
-    if(buyerId){
-      agent.Basket.get()
-        .then(basket=> dispatch(setBasket(basket)))
-        .catch(error => console.log(error))
-        .finally(() => setLoading(false));
-    }
-    // testim ekstra nese nuk ka buyerId dikush athere nuk e nalum loading i del veq mesazhi qe empty o basket.
-    else{
-      setLoading(false);
-    }
-  },[dispatch])
+// e kem perdor Callback function per arsyje qe mos me hi nloop pasi ndispatch kem me bo set user ose set basket
+// qe munet bo cause naj loop qe mu thirr sa her t bohet render e kjo e man nmen kshtu qe kur tthirret ne useEffect nuk bohet loop.
+  useEffect(() => {
+    initApp().then(() => setLoading(false));
+  }, [initApp])
 
 
   const [darkMode, setDarkMode] = useState(false);
@@ -37,16 +34,16 @@ function App() {
   const theme = createTheme({
     palette: {
       mode: paletteType,
-      background : {
-        default : paletteType === 'light' ? '#eaeaea' : '#121212'
+      background: {
+        default: paletteType === 'light' ? '#eaeaea' : '#121212'
       }
     }
   })
-  function handleThemeChange(){
+  function handleThemeChange() {
     setDarkMode(!darkMode);
   }
 
-  if(loading) return <LoadingComponent message="Initialising app..."></LoadingComponent>
+  if (loading) return <LoadingComponent message="Initialising app..."></LoadingComponent>
 
 
 
@@ -55,14 +52,14 @@ function App() {
   // outlet e vendosim ne container per shkak te navigimit per shkak se ajo zevendsohet me secilin root varesisht se cilin component e prekim na 
   //psh nese ne navigojm te catalog ather outlet eshte ekuivalente me <Catalog /> etj.
   return (
-    <ThemeProvider theme ={theme}>
+    <ThemeProvider theme={theme}>
       <ToastContainer position="bottom-right" hideProgressBar theme="colored" />
-        <CssBaseline />
-        <Header darkMode = {darkMode} handleThemeChange = {handleThemeChange} />
-        <Container>
+      <CssBaseline />
+      <Header darkMode={darkMode} handleThemeChange={handleThemeChange} />
+      <Container>
         <Outlet />
-        </Container>
-      
+      </Container>
+
     </ThemeProvider>
   );
 }
