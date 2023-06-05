@@ -63,7 +63,7 @@ builder.Services.AddIdentityCore<User>(opt =>
     // kto jon mundsit per me shtu contraints ne identity configuration 
     opt.User.RequireUniqueEmail = true;
 })
-    .AddRoles<IdentityRole>()
+    .AddRoles<Role>()
     .AddEntityFrameworkStores<StoreContext>();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>

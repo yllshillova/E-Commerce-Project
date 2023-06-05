@@ -92,7 +92,7 @@ const Basket = {
     get: () => requests.get('basket'),
     // productId duhet me kan e shkrume saktsisht qishtu per arsyje se API duhet me pas ni key
     // qe i pershtatet kur t shkon te basketController ne httpPost request me kqyr.
-    addItem: (productId: number, quantity = 1 ) => requests.post(`basket?productId=${productId}&quantity=${quantity}`,{}),
+    addItem: (productId: number, quantity = 1) => requests.post(`basket?productId=${productId}&quantity=${quantity}`,{}),
     removeItem: (productId: number, quantity = 1) => requests.delete(`basket?productId=${productId}&quantity=${quantity}`)
 
 }

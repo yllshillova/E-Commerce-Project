@@ -11,6 +11,7 @@ namespace API.Entities
             // kushti nese ekziston produkti ne shporte nese jo ather me shtu
             if(Items.All(item => item.ProductId != product.Id)){
                 Items.Add(new BasketItem{Product = product, Quantity = quantity});
+                return;
             }
             var existingItem = Items.FirstOrDefault(item => item.ProductId == product.Id );
             // kushti per menaxhimin e kuantitetit te nje item te caktuar qe ekziston ne shporte

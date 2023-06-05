@@ -68,7 +68,7 @@ export const basketSlice = createSlice({
             state.basket = null;
         }
     },
-    extraReducers: (builder => {
+    extraReducers: builder => {
         builder.addCase(addBasketItemAsync.pending, (state, action) => {
             //  kta action.meta.arg.productId ja kem concatinate qe mos me u bo loading krejt produktet kur t klikohet add to cart po veq ajo qe po klikojm nto.
             state.status = 'pendingAddItem' + action.meta.arg.productId;
@@ -101,7 +101,7 @@ export const basketSlice = createSlice({
             console.log(action.payload);
             state.status = 'idle';
         });
-    })
+    }
 })
 
 
