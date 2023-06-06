@@ -12,7 +12,8 @@ import CheckoutPage from "../../features/checkout/CheckoutPage";
 import Login from "../../features/account/Login";
 import Register from "../../features/account/Register";
 import RequireAuth from "./RequireAuth";
-// Ktu e kem kriju navigimin ne mes komponentave tu e perdor createBrowserRouter qe e marum prej react router dom.
+import Orders from "../../features/orders/Orders";
+// Ktu e kem kriju ../../features/orders/Ordersve tu e perdor createBrowserRouter qe e marum prej react router dom.
 //ky merr si parameter nje route object ku ne duhet me ja definu path, element se kush eshte targeti yne per shkak se eshte nje SPA dhe children
 //ne rastin tone children jane komponentat siq jan catalog, product details, homepage etj.
 export const router = createBrowserRouter([
@@ -21,7 +22,8 @@ export const router = createBrowserRouter([
         element: <App />,
         children: [
             {element: <RequireAuth />, children: [
-                {path: 'checkout', element: <CheckoutPage />}
+                {path: 'checkout', element: <CheckoutPage />},
+                {path: 'orders', element: <Orders />}
             ]},
             {path: '', element: <HomePage />},
             {path: 'catalog', element: <Catalog />},
