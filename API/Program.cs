@@ -80,6 +80,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddAuthorization();
 // service mbetet alive perderisa eshte tu u procesu httprequesti pasi t mbaron servisi asgjesohet poashtu
 builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<PaymentService>();
+
 
 var app = builder.Build();
 
