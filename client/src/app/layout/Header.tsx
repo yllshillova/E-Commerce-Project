@@ -38,7 +38,7 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
     // funksion i cili merr nje vlere te sum 0 dhe mbledh items ne array te caktuar duke kthyer nje shume ne itemCount qe eshte totali i items ne shporte.
     const itemCount = basket?.items.reduce((sum, item) => sum + item.quantity, 0);
     return (
-        <AppBar position="static" sx={{ mb: 4 }}>
+        <AppBar position="static" >
             <Toolbar sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 {/* title */}
                 <Box display='flex' alignItems='center'>

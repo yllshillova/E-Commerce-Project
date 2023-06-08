@@ -11,7 +11,8 @@ import { router } from './app/router/Routes';
 import { Provider } from 'react-redux';
 import { store } from './app/store/configureStore';
 // Kjo eshte our startup class or file or component whatever we wanna call it.
-
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

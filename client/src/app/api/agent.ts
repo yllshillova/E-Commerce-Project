@@ -6,7 +6,7 @@ import { store } from "../store/configureStore";
 
 const sleep = () => new Promise(resolve => setTimeout(resolve, 500));
 
-axios.defaults.baseURL = 'http://localhost:5000/api/';
+axios.defaults.baseURL = process.env.REACT_APP_API_URL;
 // kta e bojm qe me mujt browseri me pranu cookie dhe me bo set cookie ne storage tone te applikacionit.
 axios.defaults.withCredentials = true;
 // responseBody is equivalent to :
@@ -29,7 +29,9 @@ axios.interceptors.request.use(config => {
 // gabimev ju kem qas tu perdor AxiosError response ku i qasemi JSON file duke perdor parametrat data dhe status 
 // data permban fusha te caktuara ne json response qe e kemi krijuar ne exceptionmiddleware  kurse statusi varet nga errori psh 400 401 500 etc.
 axios.interceptors.response.use(async response => {
-    await sleep();
+    if(process.env.NODE_ENV === 'development') {
+        await sleep();
+    }
     const pagination = response.headers['pagination'];
     if(pagination){
         response.data = new PaginatedResponse(response.data, JSON.parse(pagination));

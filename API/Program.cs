@@ -48,7 +48,7 @@ builder.Services.AddSwaggerGen(c =>
 // Service for DB Connection
 builder.Services.AddDbContext<StoreContext>(options =>
 {
-    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 /*
@@ -98,6 +98,10 @@ if (app.Environment.IsDevelopment())
         c.ConfigObject.AdditionalItems.Add("persistAuthorization","true");
     });
 }
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 // pjesa ku shtohet middleware per me leju kerkesa pi burimit localhost:3000
 app.UseCors(opt =>
 {                                      //kta e perdorum(allow credentials) per me lehu klientin me pass cookie prej api ne client side dhe anasjelltas
@@ -110,6 +114,11 @@ app.UseAuthorization();
 //api e din se ku ko me dergu request kur vjen puna te nje API endpoint sepse e shton konfigurimin e rrugetimit
 //per kontrollerat duke e perdor ket metod specifike..
 app.MapControllers();
+// fallback controller qe i tregon api qka me bo kur navigon ne nje route qe nuk e njeh
+app.MapFallbackToController("Index", "Fallback");
+
+
+
 // pjesa ku fillohet menaxhimi nese ka databaz ose jo e poashtu ndonje pending migration...
 var scope = app.Services.CreateScope();
 var context = scope.ServiceProvider.GetRequiredService<StoreContext>();
