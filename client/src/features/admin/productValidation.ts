@@ -9,9 +9,8 @@ export const validationSchema = yup.object({
     quantityInStock: yup.number().transform((value) => (isNaN(value) || value === null || value === undefined) ? 0 : value)
     .required().positive(),
     description: yup.string().required(),
-    file: yup.mixed().required("Please provide a new image")
-    // .when('pictureUrl',{
-    //    is: (value: string) => !value,
-    //    then: yup.mixed().required('Please provide an image')
-    // })
+    file: yup.mixed().when('productUrl', {
+        is: (value: string) => !value,
+        then: (schema) => schema.required('Please provide an image')
+      })
 })
