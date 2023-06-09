@@ -7,7 +7,7 @@ import SignedInMenu from "./SignedInMenu";
 const midLinks = [
     { title: 'catalog', path: '/catalog' },
     { title: 'about', path: '/about' },
-    { title: 'contact', path: '/contact' },
+    // { title: 'contact', path: '/contact' },
 ]
 const rightLinks = [
     { title: 'login', path: '/login' },
@@ -46,7 +46,7 @@ export default function Header({ darkMode, handleThemeChange }: Props) {
                         to='/'
                         sx={navStyles}
                     >
-                        E-STORE
+                        TECH-STORE
                     </Typography>
                     <Switch checked={darkMode} onChange={handleThemeChange} />
                 </Box>

@@ -13,13 +13,16 @@ export default function HomePage() {
         <>
             <Slider {...settings}>
                 <div>
-                    <img src="/images/hero1.jpg" alt="hero" style={{ display: 'block', width: '100%', maxHeight: 500 }} />
+                    <img src="/images/products/Lenovo-IdeaPad-Gaming-3-15ACH6.png" alt="acer" style={{ display: 'block', width: '100%', maxHeight: 500 }} />
                 </div>
                 <div>
-                    <img src="/images/hero2.jpg" alt="hero" style={{ display: 'block', width: '100%', maxHeight: 500 }} />
+                    <img src="/images/products/Apple-Watch-S8-GPS-41mm.jpg" alt="watch" style={{ display: 'block', width: '100%', maxHeight: 500 }} />
                 </div>
                 <div>
-                    <img src="/images/hero3.jpg" alt="hero" style={{ display: 'block', width: '100%', maxHeight: 500 }} />
+                    <img src="/images/products/ASUS-ROG-Strix-G10DK.png" alt="iphone" style={{ display: 'block', width: '100%', maxHeight: 500 }} />
+                </div>
+                <div>
+                    <img src="/images/products/Xiaomi-Imilab-W12-(037617).jpg" alt="hero" style={{ display: 'block', width: '100%', maxHeight: 500 }} />
                 </div>
             </Slider>
 

@@ -1,24 +1,86 @@
-import { Button, ButtonGroup, Typography } from "@mui/material";
-import { useAppDispatch, useAppSelector } from "../../app/store/configureStore";
-import { decrement, increment } from "./counterSlice";
+import React, { useState, ChangeEvent, FormEvent } from 'react';
+import { Box, Container, Typography, TextField, Button, Snackbar } from '@mui/material';
+import { Alert } from '@mui/material';
 
-export default function ContactPage() {
-    const dispatch= useAppDispatch();
-    const { data, title } = useAppSelector(state => state.counter);
-    return (
-        <>
-            <Typography variant="h2">
-                {title}
-            </Typography>
-            <Typography variant="h5">
-                The data is : {data}
-            </Typography>
-            <ButtonGroup>
-                <Button onClick={() => dispatch(decrement(1))} variant ='contained' color='error'>Decrement</Button>
-                <Button onClick={() => dispatch(increment(1))}variant ='contained' color='primary'>Increment</Button>
-                <Button onClick={() => dispatch(increment(5))}variant ='contained' color='secondary'>Increment by 5</Button>
-            </ButtonGroup>
-        </>
-
-    )
+interface FormData {
+  name: string;
+  email: string;
+  message: string;
 }
+
+const ContactPage: React.FC = () => {
+  const [formData, setFormData] = useState<FormData>({
+    name: '',
+    email: '',
+    message: '',
+  });
+
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    // Add your form submission logic here
+    setFormData({ name: '', email: '', message: '' });
+    setSnackbarOpen(true);
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+  };
+
+  return (
+    <Box py={4}>
+      <Container maxWidth="sm">
+        <Typography variant="h4" align="center" gutterBottom>
+          Contact Us
+        </Typography>
+        <form onSubmit={handleSubmit}>
+          <TextField
+            label="Name"
+            fullWidth
+            margin="normal"
+            name="name"
+            value={formData.name}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            label="Email"
+            fullWidth
+            margin="normal"
+            name="email"
+            type="email"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+          <TextField
+            label="Message"
+            fullWidth
+            margin="normal"
+            name="message"
+            multiline
+            rows={4}
+            value={formData.message}
+            onChange={handleChange}
+            required
+          />
+          <Button variant="contained" color="primary" type="submit">
+            Submit
+          </Button>
+        </form>
+      </Container>
+      <Snackbar open={snackbarOpen} autoHideDuration={3000} onClose={handleSnackbarClose}>
+        <Alert onClose={handleSnackbarClose} severity="success" sx={{ width: '100%' }}>
+          Message submitted successfully!
+        </Alert>
+      </Snackbar>
+    </Box>
+  );
+};
+
+export default ContactPage;
