@@ -10,21 +10,24 @@ namespace API.Services
     public class ImageService
     {
         private readonly Cloudinary _cloudinary;
+
         public ImageService(IConfiguration config)
         {
-            var account = new Account(
+            var acc = new Account
+            (
                 config["Cloudinary:CloudName"],
                 config["Cloudinary:ApiKey"],
                 config["Cloudinary:ApiSecret"]
             );
-            _cloudinary = new Cloudinary(account);
+
+            _cloudinary = new Cloudinary(acc);
         }
 
         public async Task<ImageUploadResult> AddImageAsync(IFormFile file)
         {
             var uploadResult = new ImageUploadResult();
 
-            if(file.Length > 0)
+            if (file.Length > 0)
             {
                 using var stream = file.OpenReadStream();
                 var uploadParams = new ImageUploadParams
@@ -35,18 +38,15 @@ namespace API.Services
             }
 
             return uploadResult;
-
         }
 
         public async Task<DeletionResult> DeleteImageAsync(string publicId)
         {
             var deleteParams = new DeletionParams(publicId);
-            
+
             var result = await _cloudinary.DestroyAsync(deleteParams);
-            
+
             return result;
         }
-
-
     }
 }

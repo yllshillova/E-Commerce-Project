@@ -86,35 +86,31 @@ namespace API.Controllers
         public async Task<ActionResult<Product>> UpdateProduct([FromForm]UpdateProductDto productDto)
         {
             var product = await _context.Products.FindAsync(productDto.Id);
+
             if (product == null) return NotFound();
 
             _mapper.Map(productDto, product);
+
             if (productDto.File != null)
             {
-                // attempt to upload the image
-                var imageResult = await _imageService.AddImageAsync(productDto.File);
-                // nese fail me i shfaq bad request
-                if (imageResult.Error != null)
-                {
-                    return BadRequest(new ProblemDetails { Title = imageResult.Error.Message });
-                }
-                // kqyr a ka pas naj figur ma heret qe ka pas e fshin ata per me mujt me vendos t rejen 
-                if (!string.IsNullOrEmpty(product.PublicId))
-                {
+                var imageUploadResult = await _imageService.AddImageAsync(productDto.File);
+
+                if (imageUploadResult.Error != null) 
+                    return BadRequest(new ProblemDetails { Title = imageUploadResult.Error.Message });
+
+                if (!string.IsNullOrEmpty(product.PublicId)) 
                     await _imageService.DeleteImageAsync(product.PublicId);
-                }
-                product.PictureUrl = imageResult.SecureUrl.ToString();
-                product.PublicId = imageResult.PublicId;
+
+                product.PictureUrl = imageUploadResult.SecureUrl.ToString();
+                product.PublicId = imageUploadResult.PublicId;
             }
 
             var result = await _context.SaveChangesAsync() > 0;
 
             if (result) return Ok(product);
 
-            return BadRequest(new ProblemDetails { Title = "Problem updating the product" });
-
+            return BadRequest(new ProblemDetails { Title = "Problem updating product" });
         }
-
         [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
 
