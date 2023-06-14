@@ -67,6 +67,7 @@ builder.Services.AddIdentityCore<User>(opt =>
 })
     .AddRoles<Role>()
     .AddEntityFrameworkStores<StoreContext>();
+    
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(opt =>
     {

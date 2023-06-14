@@ -114,7 +114,7 @@ export default function ProductForm({ product, cancelEdit }: Props) {
                                 </>
                             ) : (
                                 <>
-                                    <Typography variant='h5'>Product Image preview:</Typography>
+                                    <Typography variant='h5'>Current Product Image:</Typography>
                                     {product?.pictureUrl ? (
                                         <img
                                             src={product.pictureUrl}
@@ -144,7 +144,7 @@ export default function ProductForm({ product, cancelEdit }: Props) {
                                                     fontWeight: 'bold'
                                                 }}
                                             >
-                                                No image preview yet!
+                                                No current image yet!
                                             </span>
                                         </div>
                                     )}
