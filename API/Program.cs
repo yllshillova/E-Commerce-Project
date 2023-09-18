@@ -50,7 +50,7 @@ builder.Services.AddSwaggerGen(c =>
 // Service for DB Connection
 builder.Services.AddDbContext<StoreContext>(options =>
 {
-    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
 /*
